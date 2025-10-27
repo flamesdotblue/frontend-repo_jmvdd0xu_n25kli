@@ -15,13 +15,25 @@ const itemsLibrary = [
   { icon: Settings, label: 'Settings' },
 ];
 
-const SidebarItem = ({ icon: Icon, label, expanded }) => (
-  <button className={`flex items-center w-full gap-3 rounded-lg px-3 py-2 hover:bg-gray-100 transition-colors ${expanded ? 'justify-start' : 'flex-col py-4'}`}>
-    <Icon className="h-5 w-5" />
-    {expanded && <span className="text-sm">{label}</span>}
-    {!expanded && <span className="text-[11px] text-gray-600">{label}</span>}
-  </button>
-);
+const SidebarItem = ({ icon: Icon, label, expanded }) => {
+  if (expanded) {
+    return (
+      <button className="group flex items-center w-full gap-3 rounded-lg px-3 py-2 hover:bg-gray-100 transition-colors justify-start">
+        <Icon className="h-5 w-5" />
+        <span className="text-sm">{label}</span>
+      </button>
+    );
+  }
+
+  return (
+    <button className="group w-full rounded-xl px-0 py-3 grid place-items-center text-center">
+      <span className="rounded-lg p-2 transition-colors group-hover:bg-gray-100">
+        <Icon className="h-5 w-5" />
+      </span>
+      <span className="mt-1 block text-[11px] text-gray-600">{label}</span>
+    </button>
+  );
+};
 
 const Sidebar = ({ expanded }) => {
   return (

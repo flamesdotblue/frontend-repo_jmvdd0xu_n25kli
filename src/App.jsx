@@ -1,10 +1,12 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import Navbar from './components/Navbar.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import VideoGrid from './components/VideoGrid.jsx';
+import WatchPage from './components/WatchPage.jsx';
 
 function App() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [currentVideo, setCurrentVideo] = useState(null);
 
   const videos = useMemo(() => {
     const sampleTitles = [
@@ -20,6 +22,13 @@ function App() {
       'The Secret to Engaging Intros',
       'Motion Graphics Essentials in 10 Steps',
       'Export Settings for Every Platform',
+    ];
+
+    const videoSources = [
+      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
+      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
     ];
 
     return sampleTitles.map((title, idx) => {
@@ -39,8 +48,23 @@ function App() {
         duration: durations[idx % durations.length],
         thumbnail: `https://picsum.photos/id/${picsumId}/1280/720`,
         avatar: `https://picsum.photos/id/${avatarId}/200/200`,
+        videoUrl: videoSources[idx % videoSources.length],
       };
     });
+  }, []);
+
+  const handleSelectVideo = useCallback((video) => {
+    setCurrentVideo(video);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  const handleBackOrSelectNext = useCallback((v) => {
+    if (v) {
+      setCurrentVideo(v);
+      window.scrollTo({ top: 0 });
+    } else {
+      setCurrentVideo(null);
+    }
   }, []);
 
   return (
@@ -50,7 +74,11 @@ function App() {
         <div className="flex gap-6">
           <Sidebar expanded={sidebarExpanded} />
           <main className="flex-1 py-6">
-            <VideoGrid videos={videos} />
+            {!currentVideo ? (
+              <VideoGrid videos={videos} onSelect={handleSelectVideo} />
+            ) : (
+              <WatchPage video={currentVideo} related={videos.filter(v => v.id !== currentVideo.id)} onBackToHome={handleBackOrSelectNext} />
+            )}
           </main>
         </div>
       </div>

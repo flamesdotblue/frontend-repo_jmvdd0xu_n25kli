@@ -7,9 +7,9 @@ const formatViews = (num) => {
   return `${num} views`;
 };
 
-const VideoCard = ({ video }) => {
+const VideoCard = ({ video, onClick }) => {
   return (
-    <div className="group">
+    <button onClick={() => onClick?.(video)} className="group text-left w-full">
       <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-gray-200">
         <img
           src={video.thumbnail}
@@ -33,11 +33,11 @@ const VideoCard = ({ video }) => {
           <p className="mt-1 text-sm text-gray-600">{video.channel}</p>
           <p className="text-xs text-gray-500">{formatViews(video.views)} • {video.published}</p>
         </div>
-        <button className="p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span className="p-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <MoreVertical className="h-5 w-5 text-gray-600" />
-        </button>
+        </span>
       </div>
-    </div>
+    </button>
   );
 };
 
